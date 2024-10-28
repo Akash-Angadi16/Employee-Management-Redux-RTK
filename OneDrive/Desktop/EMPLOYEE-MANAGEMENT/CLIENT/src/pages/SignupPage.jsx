@@ -101,22 +101,16 @@ export function SignupPage() {
             password: "",
             confirmPassword: "",
           }));
-
-          // setTimeout(() => {
-          //   navigate("/login");
-          // }, 2000);
         }
       } catch (error) {
         toast.error("Error Saving Data", {
           position: "top-center",
           autoClose: 3000,
         });
-        console.log("error " + error);
       }
     }
   };
   const handleVerificationEmail = async () => {
-    console.log("Hello Email");
     try {
       let response = await axios.post(
         "http://localhost:3000/api/verify-email",
@@ -127,6 +121,9 @@ export function SignupPage() {
         position: "top-center",
         autoClose: 2000,
       });
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       toast.error("Error sending verification email", {
         position: "top-center",
@@ -164,7 +161,7 @@ export function SignupPage() {
             </Typography>
           )}
 
-          <div className>
+          <div>
             <Typography variant="h6" color="blue-gray" className="mb-1">
               Your Email
             </Typography>

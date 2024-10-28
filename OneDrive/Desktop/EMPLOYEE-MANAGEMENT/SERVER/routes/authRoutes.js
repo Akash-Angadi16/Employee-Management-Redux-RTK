@@ -83,7 +83,7 @@ router.post("/verify-email", async (req, res) => {
   });
 });
 
-/////------------------------------------------------------------------------------------------------------
+/// ----------------------------------------------------------------------------------------------------------//
 //Verfy the email recieved
 router.get("/verify", async (req, res) => {
   const { token } = req.query;
@@ -104,7 +104,7 @@ router.get("/verify", async (req, res) => {
   });
 });
 
-////------------------------------------------------login the user---------------------------
+/// ----------------------------------------------------------------------------------------------------------//
 // Login user
 router.post("/login", async (req, res) => {
   try {
@@ -117,7 +117,7 @@ router.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.json({ message: "Invalid email or password" });
     }
 
     if (user.verify == true) {
@@ -125,7 +125,7 @@ router.post("/login", async (req, res) => {
         expiresIn: "1h",
       });
 
-      res.json({ token, code: 1, message: "Logged in successfully" });
+      res.json({ token, user, code: 1, message: "Logged in successfully" });
     } else {
       res.json({ code: 0, message: "Please verify your email" });
     }
@@ -134,6 +134,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/// ----------------------------------------------------------------------------------------------------------//
 // Verify token
 router.post("/verify-token", (req, res) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");

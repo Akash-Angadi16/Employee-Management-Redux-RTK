@@ -9,7 +9,6 @@ import {
 } from "@material-tailwind/react";
 import {
   PresentationChartBarIcon,
-  ShoppingBagIcon,
   UserCircleIcon,
   Cog6ToothIcon,
   InboxIcon,
@@ -17,82 +16,131 @@ import {
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { useState, useContext } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import default styles
+import { UserContext } from "../UserContext";
 
 function Sidebar() {
   const navigate = useNavigate();
+  const [isEmployeeMasterOpen, setIsEmployeeMasterOpen] = useState(false);
+  const { user } = useContext(UserContext);
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to log out?");
-    if (confirmed) {
-      localStorage.removeItem("token");
-      toast.info("Logged out successfully !", {
-        position: "top-center",
-        autoClose: 1000,
-      });
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    }
+    confirmAlert({
+      title: "Confirm Logout",
+      message: "Are you sure you want to log out?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            localStorage.removeItem("token");
+            toast.info("Logged out successfully!", {
+              position: "top-center",
+              autoClose: 1000,
+            });
+            setTimeout(() => {
+              navigate("/login");
+            }, 1000);
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {},
+        },
+      ],
+    });
   };
+
+  const toggleEmployeeMaster = () => {
+    setIsEmployeeMasterOpen(!isEmployeeMasterOpen);
+  };
+
   return (
-    <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 ">
-      <div className="mb-2 p-4">
-        <Typography variant="h5" color="blue-gray">
-          Sidebar
-        </Typography>
-      </div>
-      <List>
-        <ListItem>
-          <ListItemPrefix>
-            <PresentationChartBarIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Create Employee
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <ShoppingBagIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          E-Commerce
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Inbox
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Profile
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Settings
-        </ListItem>
-        <ListItem
-          onClick={handleLogout}
-          className="cursor-pointer hover:bg-gray-400"
-        >
-          <ListItemPrefix>
-            <PowerIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Log Out
-        </ListItem>
+    <div className="min-h-screen flex">
+      <Card className="h-full w-64 p-6 bg-white shadow-lg rounded-lg">
+        <div className="mb-4">
+          <Typography variant="h3" className="font-bold text-blue-500">
+            Hey {user.name}
+          </Typography>
+        </div>
+        <List>
+          <ListItem
+            className="cursor-pointer hover:bg-blue-50 rounded-md transition duration-150"
+            onClick={() => navigate("/dashboard")}
+          >
+            <ListItemPrefix>
+              <PresentationChartBarIcon className="h-5 w-5 text-blue-600" />
+            </ListItemPrefix>
+            Dashboard
+          </ListItem>
+          <ListItem
+            onClick={toggleEmployeeMaster}
+            className="cursor-pointer hover:bg-blue-50 rounded-md transition duration-150"
+          >
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5 text-blue-600" />
+            </ListItemPrefix>
+            Employee Masters
+          </ListItem>
+          {isEmployeeMasterOpen && (
+            <>
+              <ListItem
+                className="pl-10 cursor-pointer hover:bg-blue-50 rounded-md transition duration-150"
+                onClick={() => navigate("/create")}
+              >
+                Create
+              </ListItem>
+              <ListItem
+                className="pl-10 cursor-pointer hover:bg-blue-50 rounded-md transition duration-150"
+                onClick={() => navigate("/list")}
+              >
+                List
+              </ListItem>
+            </>
+          )}
+
+          <ListItem className="cursor-pointer hover:bg-blue-50 rounded-md transition duration-150">
+            <ListItemPrefix>
+              <InboxIcon className="h-5 w-5 text-blue-600" />
+            </ListItemPrefix>
+            Inbox
+            <ListItemSuffix>
+              <Chip
+                value="14"
+                size="sm"
+                variant="ghost"
+                color="blue-gray"
+                className="rounded-full"
+              />
+            </ListItemSuffix>
+          </ListItem>
+          <ListItem className="cursor-pointer hover:bg-blue-50 rounded-md transition duration-150">
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5 text-blue-600" />
+            </ListItemPrefix>
+            Profile
+          </ListItem>
+          <ListItem className="cursor-pointer hover:bg-blue-50 rounded-md transition duration-150">
+            <ListItemPrefix>
+              <Cog6ToothIcon className="h-5 w-5 text-blue-600" />
+            </ListItemPrefix>
+            Settings
+          </ListItem>
+          <ListItem
+            onClick={handleLogout}
+            className="cursor-pointer hover:bg-red-100 rounded-md transition duration-150"
+          >
+            <ListItemPrefix>
+              <PowerIcon className="h-5 w-5 text-red-600" />
+            </ListItemPrefix>
+            Log Out
+          </ListItem>
+        </List>
         <ToastContainer />
-      </List>
-    </Card>
+      </Card>
+    </div>
   );
 }
+
 export default Sidebar;

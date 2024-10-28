@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Sidebar from "./SideBar"; // Ensure you import your Sidebar component
 import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Typography } from "@material-tailwind/react";
+import { UserContext } from "../UserContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -62,8 +63,8 @@ const Dashboard = () => {
       <Sidebar />
       <div className="flex-grow p-2 bg-gradient-to-bl from-gray-700 via-gray-800 to-gray-900">
         <div className="bg-white bg-opacity-80 rounded-lg shadow-2xl p-5 mb-10 transform hover:scale-105 transition-transform duration-100">
-          <h1 className="text-6xl font-bold text-indigo-700">
-            Welcome to your Dashboard!
+          <h1 className="text-4xl font-bold text-indigo-700">
+            Hi {user.name}, Welcome to your Dashboard!
           </h1>
         </div>
         <div className="flex flex-wrap justify-around">

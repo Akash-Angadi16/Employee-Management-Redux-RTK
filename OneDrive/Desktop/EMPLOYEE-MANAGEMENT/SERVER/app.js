@@ -116,6 +116,10 @@ mongoose
 const authRoutes = require("./routes/authRoutes");
 app.use("/api", authRoutes);
 
+//CRUD  operations for employees
+const employeeRoutes = require("./routes/employeeRoutes");
+app.use("/employee", employeeRoutes);
+
 //Test route
 app.get("/Test", (req, res) => {
   res.send("server is running");
